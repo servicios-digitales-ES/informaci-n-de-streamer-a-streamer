@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Cómo se trabaja · Guía para las chicas</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#14101f;--bg2:#2b1650;--tx:#fff;--dim:rgba(255,255,255,.32);--pri:#ff5fa2;--card:rgba(255,255,255,.08)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:linear-gradient(180deg,var(--bg2),var(--bg) 70%);color:var(--tx);font:700 16px/1.4 "Plus Jakarta Sans",system-ui,sans-serif;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{padding:14px 18px 8px;text-align:center}
+header small{color:var(--pri);font-weight:800;letter-spacing:.04em}
+header h1{margin:2px 0 10px;font-size:18px}
+.modes{display:inline-flex;background:var(--card);border-radius:99px;padding:4px}
+.modes button{border:0;background:none;color:var(--tx);font:inherit;font-size:14px;padding:8px 18px;border-radius:99px;cursor:pointer;opacity:.6}
+.modes button[aria-pressed=true]{background:var(--pri);opacity:1}
+#lyrics{flex:1;overflow-y:auto;padding:38vh 22px;scroll-behavior:smooth;scrollbar-width:none;mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent)}
+#lyrics::-webkit-scrollbar{display:none}
+#lyrics p{margin:0 0 18px;font-size:25px;line-height:1.25;font-weight:800;color:var(--dim);cursor:pointer;transition:color .3s,transform .3s;transform-origin:left}
+#lyrics p.h{font-size:13px;color:var(--pri);letter-spacing:.06em;text-transform:uppercase;margin:34px 0 12px;opacity:.55}
+#lyrics p.on{color:var(--tx);transform:scale(1.04)}
+#lyrics p.h.on{opacity:1;transform:none}
+#lyrics p.past:not(.h){color:rgba(255,255,255,.5)}
+footer{padding:10px 18px 18px;background:linear-gradient(transparent,var(--bg) 40%)}
+.bar{height:4px;background:var(--card);border-radius:9px;overflow:hidden;margin-bottom:12px}
+#fill{height:100%;width:0;background:var(--pri);transition:width .3s}
+.ctl{display:flex;align-items:center;justify-content:center;gap:26px}
+.ctl button{border:0;background:none;color:var(--tx);font-size:26px;cursor:pointer;padding:6px}
+#play{width:60px;height:60px;border-radius:50%;background:var(--tx);color:var(--bg);font-size:24px}
+#info{text-align:center;font-size:12px;color:var(--dim);margin-top:8px;font-weight:500}
+button:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){#lyrics{scroll-behavior:auto}#lyrics p,#fill{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <small>GUÍA PARA LAS CHICAS</small>
+  <h1>Cómo se trabaja, de verdad</h1>
+  <div class="modes" role="group" aria-label="Modo">
+    <button id="mL" aria-pressed="true">🔊 Escuchar</button>
+    <button id="mR" aria-pressed="false">📖 Solo leer</button>
+  </div>
+</header>
+<main id="lyrics" aria-live="off"></main>
+<footer>
+  <div class="bar"><div id="fill"></div></div>
+  <div class="ctl">
+    <button id="prev" aria-label="Frase anterior">⏮</button>
+    <button id="play" aria-label="Reproducir">▶</button>
+    <button id="next" aria-label="Frase siguiente">⏭</button>
+  </div>
+  <div id="info">Toca una frase para ir a ella</div>
+</footer>
+<script>
+const L=[
+"#Antes de descargar nada",
+"Vaya, chicas, antes de decirles los nombres de las apps, les voy a explicar todo.",
+"Así no se descargan nada a lo loco.",
+"Primero entiendan en qué consiste esto, y ya después vemos las apps.",
+"#De qué se trata de verdad",
+"El trabajo es darle entretenimiento a hombres.",
+"Y seamos claras: ningún hombre recarga una app para preguntarte qué color de camisa vas a usar hoy.",
+"La mayoría busca cosas sexuales, y mejor que lo sepan desde ya.",
+"Por eso les digo: esto es un trabajo, y se hace con la mente bien puesta.",
+"Separen lo profesional de lo personal. Ahí ustedes están en su papel, casi como una actriz.",
+"Y quítense de la cabeza lo del “dinero fácil”, porque no lo es.",
+"La sociedad cree que quien hace esto es porque le gusta lo fácil. Pues no.",
+"Requiere esfuerzo, dedicación y constancia. Pero con el tiempo, da resultados.",
+"#Cómo se gana el dinero",
+"Es como el saldo del celular.",
+"Ustedes recargan Claro, Tigo, Digicel, lo que sea, y si no tienen saldo, no llaman.",
+"Pues aquí igual: ellos recargan monedas, y si no tienen monedas, no pueden llamarnos.",
+"Por cada minuto de llamada, a ellos les van descontando monedas.",
+"Y esas monedas pasan automáticamente a ustedes.",
+"Si un hombre se gastó 1,000 monedas en una llamada, esas 1,000 son suyas.",
+"Por eso el objetivo es uno solo: alargar las llamadas. A ustedes les pagan por minuto.",
+"Y cuando junten cierta cantidad, la pueden retirar.",
+"#Los hombres que se van a encontrar",
+"Según mi experiencia, como el 90% ya viene con todo preparado.",
+"Y casi siempre ese 90% no tiene dinero.",
+"Pero no son inútiles: sirven para ganar bonos y cosas extras que da la app.",
+"Luego están los que sí tienen dinero. Esos se notan, ya van a aprender a identificarlos.",
+"Y están los conversadores. Hay bastantes.",
+"Con ellos es con quienes más dinero me he hecho, porque son platicones y son los que más tienen.",
+"Mi primera llamada larga fue con un hombre de Israel, hace 2 años.",
+"Duró 40 minutos y yo estaba emocionadísima.",
+"Solo quería platicar: qué le gustaba, qué me gustaba a mí, de gatitos.",
+"Y aparte, igual que en TikTok, los hombres mandan regalos.",
+"#Los lives: lo público y lo privado",
+"En los lives públicos ustedes no se desnudan.",
+"Lo público lo monitorea la app. Lo privado es donde el usuario paga por estar.",
+"También pueden hacer lives privados con entrada.",
+"Ustedes le ponen el precio. Si no manda el regalo, no entra. Y si no tiene monedas, tampoco.",
+"Yo hago mis lives premium a 800 monedas.",
+"Para nosotras es poquito, pero a ellos 800 monedas les cuestan caras.",
+"Una vez un usuario me pidió un live premium y aceptó las 800.",
+"El live duró menos de 5 minutos y me hice como dos fichas.",
+"Así es como se avanza rápido.",
+"#Las apps que NO deben usar",
+"Hay unas apps de “mensajería” que son basura: Meyo, Sugo, Timo y Laila.",
+"No sirven para facturar.",
+"La meta mínima para retirar es de unos $10 (en algunas, $5). Pero miren cómo se gana eso:",
+"Por cada mensaje que te responde el usuario, te pagan 5 monedas.",
+"Ojo: no por los que tú mandas, sino por los que él te responde.",
+"Y la meta mínima son como 15 o 16 mil monedas.",
+"Hagan la cuenta: son miles de respuestas para sacar $10.",
+"O sea, nadie puede vivir 24 horas pegada ahí para sacar $10 a la semana.",
+"Además, estas apps hasta te marcan la distancia que hay entre tú y el usuario.",
+"Laila es peor: te conecta con gente lo más cerca que pueda. Es horrible, no la usen jamás en la vida.",
+"#Por dónde sí empezar: Juno",
+"Yo les recomiendo empezar en Juno.",
+"Ahí salen clientes más normalitos.",
+"La facturación no es altísima, pero tampoco es ridículamente baja.",
+"Y lo mejor: entran a un live y se quedan ahí platicando con los que entren.",
+"De repente les cae arriba una llamada aleatoria. No tienen que ir a buscarla, la app hace el trabajo.",
+"Esto cansa muchísimo menos, se los juro.",
+"Porque la zona de llamadas aleatorias es la que más odiamos las streamers: ahí están todos exhibiéndose y haciendo estupideces.",
+"Además, Juno les enseña a negociar con el usuario de poquito.",
+"Las monedas ahí son más baratas, y a los usuarios les cuesta mandar regalos.",
+"Pero se les acostumbra. Estudien la plantilla de regalos, que yo se las voy a pasar.",
+"Cuando lleguen a Salsa, les va a costar menos. Ya van a ver.",
+"#Una regla de oro",
+"Nunca, nunca, nunca compren monedas.",
+"En Juno sí aparece la opción de recargar, porque la app de usuarios y la de streamers es la misma.",
+"Pero no se toca.",
+"Estas apps están hechas para que nosotras ganemos, no para que gastemos en ellos.",
+"Aquí no se invierte nada. Jamás.",
+"#Gente de su mismo país",
+"A veces les va a salir gente de El Salvador. Se ve una banderita.",
+"Pueden bloquearlos o ignorarlos, cualquiera de las dos.",
+"Y ojo: no es porque corran riesgo. Es por paz mental.",
+"A muchas no nos gusta atender a gente de nuestro mismo país, y está bien.",
+"#Constancia y horarios",
+"La constancia lo es todo.",
+"Mi hermana trabajó en las apps y se conectaba tres días. Como le iba mal, decía: “ya no me conecto”.",
+"Y así no funciona. Quería que le fuera bien por ley, justo a la hora que ella decía.",
+"Cuando uno es nueva, toca hacer sacrificios.",
+"Uno es probar horarios: madrugada, mañana, tarde, noche. Yo ya los probé todos.",
+"En Juno, a mí me funciona de 7 de la noche a 12, y de 6 de la mañana a 8 o 9.",
+"Pero busquen el suyo.",
+"#La ruta que les propongo",
+"Empiecen con 4 horas diarias.",
+"Aguanten un mes completo a ese ritmo.",
+"Si aguantan, estamos listas para el siguiente paso: Salsa.",
+"Salsa paga más y es muy rentable.",
+"Pero es muy estricta. Ahorita están eliminando un montón de perfiles.",
+"Por eso primero hay que aprender bien en Juno.",
+"#Cómo se retira el dinero",
+"El retiro mínimo es de $10.",
+"Pero no les recomiendo retirar apenas lleguen a $10.",
+"La app les manda el dinero a Binance y les cobra comisión: con $10 les llegan solo $9.50.",
+"Cuando yo retiré $40, solo me quitaron $1.",
+"O sea que conviene esperar y hacer un retiro más grande.",
+"#Referidos",
+"Cuando lleguen a cierto nivel, les activan un link de referidos. A mí me lo activaron como a los $60.",
+"Pueden invitar a otras chicas: ganan una comisión de lo que ellas ganen, creo que como el 5%.",
+"Si su amiga gana $50, ustedes ganan $2.50. Es poquito, pero es dinero.",
+"También pueden invitar hombres, y les dan un porcentaje de lo que ellos gasten.",
+"#Cómo nos vamos a comunicar",
+"Todo lo vamos a centralizar en el grupo de WhatsApp.",
+"En Facebook me han borrado comentarios y hasta me sacaron de un grupo. Así dejé chicas a medias.",
+"En el grupo de noticias les voy mandando los audios.",
+"Reaccionen a cada uno, para yo saber si los van escuchando y entendiendo.",
+"Si algo no les queda claro, me dicen. Yo las ayudo.",
+"Y ya después de leer todo esto, les paso la guía paso a paso para cobrar. 💜"
+];
+const $=s=>document.querySelector(s),box=$("#lyrics"),play=$("#play"),info=$("#info");
+const SS="speechSynthesis" in window;
+let i=0,on=false,listen=SS,tok=0,tm;
+L.forEach((t,k)=>{const p=document.createElement("p");const h=t[0]==="#";p.textContent=h?t.slice(1):t;if(h)p.className="h";p.onclick=()=>go(k);box.appendChild(p)});
+const P=[...box.children];
+if(!SS){$("#mL").disabled=true;$("#mL").style.opacity=.3;$("#mR").setAttribute("aria-pressed","true");$("#mL").setAttribute("aria-pressed","false");info.textContent="Tu navegador no tiene voz: usa el modo Solo leer"}
+function voz(){const v=speechSynthesis.getVoices().filter(x=>x.lang.toLowerCase().startsWith("es"));return v.find(x=>/419|MX|US/i.test(x.lang))||v[0]}
+function show(){P.forEach((p,k)=>{p.classList.toggle("on",k===i);p.classList.toggle("past",k<i)});P[i].scrollIntoView({block:"center"});$("#fill").style.width=((i+1)/L.length*100)+"%"}
+function stop(){tok++;clearTimeout(tm);if(SS)speechSynthesis.cancel()}
+function go(k){
+  stop();if(k<0)k=0;
+  if(k>=L.length){on=false;play.textContent="▶";info.textContent="Terminamos 💜";return}
+  i=k;show();if(!on)return;
+  const h=L[i][0]==="#",t=tok,sig=()=>{if(t===tok)go(i+1)};
+  if(h)tm=setTimeout(sig,1300);
+  else if(listen){const u=new SpeechSynthesisUtterance(L[i]);u.lang="es-419";const v=voz();if(v)u.voice=v;u.onend=sig;u.onerror=sig;speechSynthesis.speak(u)}
+  else tm=setTimeout(sig,900+L[i].length*55);
+}
+play.onclick=()=>{on=!on;play.textContent=on?"⏸":"▶";info.textContent=on?(listen?"Escuchando…":"Leyendo…"):"En pausa";if(i>=L.length)i=0;go(i)};
+$("#prev").onclick=()=>go(i-1);$("#next").onclick=()=>go(i+1);
+function modo(l){if(l&&!SS)return;listen=l;$("#mL").setAttribute("aria-pressed",l);$("#mR").setAttribute("aria-pressed",!l);if(on){info.textContent=l?"Escuchando…":"Leyendo…";go(i)}}
+$("#mL").onclick=()=>modo(true);$("#mR").onclick=()=>modo(false);
+if(!SS)listen=false;else speechSynthesis.onvoiceschanged=()=>{};
+show();
+</script>
+</body>
+</html>
